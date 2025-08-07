@@ -6,7 +6,7 @@ import About from "./Components/About";
 import Resume from "./Components/Resume";
 import Portfolio from "./Components/Portfolio";
 import Contact from "./Components/Contact";
-import ContactConfirm from "./Components/contactConfirm";
+import ContactConfirm from "./Components/ContactConfirm";
 import NotFound from "./Components/404";
 import { Route, Routes } from "react-router-dom";
 
