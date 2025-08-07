@@ -8,7 +8,7 @@ router.post('/contactConfirm', async (req, res) => {
     await contact.save();
     
     // Redirect on success
-    res.redirect('/');
+    res.redirect('/confirm');
   } catch (error) {
     console.error('Error saving contact:', error);
   }
