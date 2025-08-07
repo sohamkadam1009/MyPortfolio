@@ -37,16 +37,6 @@ function ContactConfirm() {
           </span>
           <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </Link>
-
-        {/* Optional: Send Another Message Link */}
-        <div className="mt-4">
-          <Link
-            to="/contact"
-            className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 text-sm"
-          >
-            Send Another Message
-          </Link>
-        </div>
       </div>
     </section>
   );
