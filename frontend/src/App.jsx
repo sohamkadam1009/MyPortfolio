@@ -6,7 +6,7 @@ import About from "./Components/About";
 import Resume from "./Components/Resume";
 import Portfolio from "./Components/Portfolio";
 import Contact from "./Components/Contact";
-import ContactConfirm from "./Components/ContactConfirm";
+import ContactSubmit from "./Components/ContactSubmit";
 import NotFound from "./Components/404";
 import { Route, Routes } from "react-router-dom";
 
@@ -20,7 +20,7 @@ function App() {
         <Route path="/resume" element={<Resume />}></Route>
         <Route path="/portfolio" element={<Portfolio />}></Route>
         <Route path="/contact" element={<Contact />}></Route>
-        <Route path="/contact-confirmation" element={<ContactConfirm />} />
+        <Route path="/contact-confirmation" element={<ContactSubmit />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </>
