@@ -3,48 +3,8 @@ import React, { useState } from "react";
 const REACT_APP_BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "";
 
 function Contact() {
-  // Form state management
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
+  // Keep error state for potential URL-based error handling
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // Handle input changes
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const res = await fetch(`${REACT_APP_BACKEND_URL}/contactConfirm`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        setSubmitted(true);
-        setForm({ name: "", email: "", subject: "", message: "" });
-      } else {
-        setError(data.message || "There was an issue sending your message.");
-      }
-    } catch (err) {
-      setError("Error submitting form. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Static info and links (for display)
   const contactInfo = [
@@ -100,43 +60,6 @@ function Contact() {
       color: "text-pink-400 hover:text-pink-300",
     },
   ];
-
-  // Success confirmation overlay
-  if (submitted) {
-    return (
-      <section className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden">
-        {/* Background Animation */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 right-20 w-80 h-80 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full blur-3xl animate-pulse"></div>
-          <div
-            className="absolute bottom-20 left-20 w-64 h-64 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "2s" }}
-          ></div>
-        </div>
-
-        <div className="bg-gray-800/40 backdrop-blur-sm rounded-xl p-12 text-center shadow-2xl border border-gray-700/50 animate-fade-in-up relative z-10">
-          <div className="w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-8">
-            <i className="fas fa-check text-white text-3xl"></i>
-          </div>
-          <h2 className="text-4xl font-bold text-white mb-6">Thank You!</h2>
-          <p className="text-gray-300 text-lg mb-8 max-w-md">
-            Your message has been received successfully. I'll get back to you
-            within 24 hours!
-          </p>
-          <button
-            className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/25"
-            onClick={() => setSubmitted(false)}
-          >
-            <span className="relative z-10 flex items-center justify-center space-x-2">
-              <i className="fas fa-arrow-left"></i>
-              <span>Send Another Message</span>
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </button>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <>
@@ -254,7 +177,11 @@ function Contact() {
                   Send Message
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form
+                  action="/contactConfirm"
+                  method="POST"
+                  className="space-y-6"
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label
@@ -267,8 +194,6 @@ function Contact() {
                         type="text"
                         id="name"
                         name="name"
-                        value={form.name}
-                        onChange={handleChange}
                         className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300"
                         placeholder="Your name"
                         required
@@ -285,8 +210,6 @@ function Contact() {
                         type="email"
                         id="email"
                         name="email"
-                        value={form.email}
-                        onChange={handleChange}
                         className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300"
                         placeholder="your@email.com"
                         required
@@ -305,8 +228,6 @@ function Contact() {
                       type="text"
                       id="subject"
                       name="subject"
-                      value={form.subject}
-                      onChange={handleChange}
                       className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300"
                       placeholder="Project inquiry, collaboration, etc."
                       required
@@ -324,8 +245,6 @@ function Contact() {
                       id="message"
                       name="message"
                       rows="6"
-                      value={form.message}
-                      onChange={handleChange}
                       className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300 resize-none"
                       placeholder="Tell me about your project or just say hello..."
                       required
@@ -340,21 +259,11 @@ function Contact() {
 
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/25"
                   >
                     <span className="relative z-10 flex items-center justify-center space-x-2">
-                      {loading ? (
-                        <>
-                          <i className="fas fa-spinner animate-spin"></i>
-                          <span>Sending...</span>
-                        </>
-                      ) : (
-                        <>
-                          <i className="fas fa-paper-plane"></i>
-                          <span>Send Message</span>
-                        </>
-                      )}
+                      <i className="fas fa-paper-plane"></i>
+                      <span>Send Message</span>
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
