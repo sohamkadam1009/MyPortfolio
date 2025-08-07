@@ -7,11 +7,24 @@ router.post('/contactConfirm', async (req, res) => {
   try {
     const contact = new Contact(req.body);
     await contact.save();
-    res.render('contactConfirm', { formData: contact });
+    
+    // CHANGED: Return JSON instead of rendering EJS template
+    res.status(200).json({ 
+      success: true, 
+      message: 'Contact message saved successfully',
+      data: contact 
+    });
   } catch (error) {
     console.error('Error saving contact:', error);
-    res.status(500).send('There was a problem saving your contact message.');
+    
+    // CHANGED: Return JSON error instead of sending HTML error page
+    res.status(500).json({ 
+      success: false, 
+      message: 'There was a problem saving your contact message.' 
+    });
   }
 });
+
+// console.log('contactConfirm route defined');
 
 module.exports = router;

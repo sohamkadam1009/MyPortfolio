@@ -6,28 +6,29 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const connectDB = require('./utils/dbutil');
 
-// Middleware for parsing URL-encoded bodies
+// IMPORTANT: Add JSON parsing middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Set up EJS (if needed for some server-rendered pages, optional)
-app.set('view engine', 'ejs');
-
-// Serve static files from the frontend build
+// Serve static files from React build
 app.use(express.static(path.join(__dirname, 'public')));
 
-// API/backend routes (adjust as needed)
-const contactRoutes = require('./routes/Contactrouter');
+// Your contact routes
+const contactRoutes = require('./routes/Contactrouter'); // Make sure filename matches
+// console.log('Contact routes loaded');
 app.use('/', contactRoutes);
+// console.log('Contact routes registered');
 
-// SPA fallback: serve index.html for any unmatched route (after all API routes)
-app.get('*', (req, res) => {
+
+// SPA fallback route (must be AFTER your API routes)
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Connect to DB and start server
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server running on port http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
   });
 }).catch((err) => {
   console.error('Failed to connect to DB:', err);
